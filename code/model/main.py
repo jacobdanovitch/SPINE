@@ -1,6 +1,5 @@
 import torch
 from torch import nn
-from torch.autograd import Variable
 import argparse
 import utils
 from utils import DataHandler
