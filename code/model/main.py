@@ -83,16 +83,16 @@ class Solver:
 			for batch_idx in range(num_batches):
 				optimizer.zero_grad()
 				batch_x, batch_y = self.data_handler.getBatch(batch_idx, batch_size, params['noise_level'], params['denoising'] )
-				batch_x = Variable(torch.from_numpy(batch_x), requires_grad=False).type(dtype)
-				batch_y = Variable(torch.from_numpy(batch_y), requires_grad=False).type(dtype)
+				batch_x = torch.from_numpy(batch_x).type(dtype)
+				batch_y = torch.from_numpy(batch_y).type(dtype)
 				out, h, loss, loss_terms = self.model(batch_x, batch_y)
 				reconstruction_loss, psl_loss, asl_loss = loss_terms
 				loss.backward()
 				optimizer.step()
-				epoch_losses[0]+=reconstruction_loss.data[0]
-				epoch_losses[1]+=asl_loss.data[0]
-				epoch_losses[2]+=psl_loss.data[0]
-				epoch_losses[3]+=loss.data[0]
+				epoch_losses[0]+=reconstruction_loss.item()
+				epoch_losses[1]+=asl_loss.item()
+				epoch_losses[2]+=psl_loss.item()
+				epoch_losses[3]+=loss.item()
 			print("After epoch %r, Reconstruction Loss = %.4f, ASL = %.4f,"\
 						"PSL = %.4f, and total = %.4f"
 						%(iteration+1, epoch_losses[0], epoch_losses[1], epoch_losses[2], epoch_losses[3]) )
@@ -107,8 +107,8 @@ class Solver:
 		num_batches = self.data_handler.getNumberOfBatches(batch_size)
 		for batch_idx in range(num_batches):
 			batch_x, batch_y = self.data_handler.getBatch(batch_idx, batch_size, params['noise_level'], params['denoising'] )
-			batch_x = Variable(torch.from_numpy(batch_x), requires_grad=False).type(self.dtype)
-			batch_y = Variable(torch.from_numpy(batch_y), requires_grad=False).type(self.dtype)
+			batch_x = torch.from_numpy(batch_x).type(self.dtype)
+			batch_y = torch.from_numpy(batch_y).type(self.dtype)
 			_, h, _, _ = self.model(batch_x, batch_y)
 			ret.extend(h.cpu().data.numpy())
 		return np.array(ret)

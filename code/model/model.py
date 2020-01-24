@@ -1,6 +1,5 @@
 import torch
 from torch import nn
-from torch.autograd import Variable
 import logging
 logging.basicConfig(level=logging.INFO)
 
@@ -26,7 +25,7 @@ class SPINEModel(torch.nn.Module):
 	def forward(self, batch_x, batch_y):
 		
 		# forward
-		batch_size = batch_x.data.shape[0]
+		batch_size = batch_x.size(0)
 		linear1_out = self.linear1(batch_x)
 		h = linear1_out.clamp(min=0, max=1) # capped relu
 		out = self.linear2(h)
