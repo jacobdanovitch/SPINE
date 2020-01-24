@@ -10,16 +10,13 @@ import sys
 import os
 from tqdm import tqdm
 from functools import partial
+import warnings
 
 top_k_words = []
-zeros = 0.0
 threshold = 0.001
-h_dim = None
 total = None
-vectors = {}
-num = 5
 width = 10
-emb = None
+vectors = None
 
 def top_k_contrib(k, dim):
     topk = dim.nlargest(k)
@@ -27,26 +24,28 @@ def top_k_contrib(k, dim):
 
 
 def load_vectors(filename):
-    global vectors, dimensions, zeros, h_dim, total, top_k_words, emb
+    global vectors, dimensions, total, top_k_words
     
-    emb = pd.read_csv(filename, sep=" ", header=None).set_index(0)
-    vectors = dict(zip(emb.index, emb.values.tolist()))
+    vectors = pd.read_csv(filename, sep=" ", header=None).set_index(0)
+    if vectors.isnull().values.any():
+        warnings.warn("Your vectors contain null inputs. Replacing with 0.")
+        vectors = vectors.fillna(0)
     
     get_topk = partial(top_k_contrib, width)
-    top_k_words = emb.apply(get_topk, axis=0).values.tolist()
+    top_k_words = vectors.apply(get_topk, axis=0).values.tolist()
     
-    print ("Sparsity =", (100. * (emb.values <= threshold).sum()) / emb.count().sum())
+    print ("Sparsity =", (100. * (vectors.values <= threshold).sum()) / vectors.count().sum())
     total = len(vectors)
     print ('done loading vectors')
 
 
 def find_top_participating_dimensions(word, k):
-    if word not in emb.index:
+    if word not in vectors.index:
         print('word not found')
         return
 
-    dims = emb.loc[word].values.argsort()[::-1][:k]
-    vals = emb.loc[word, dims]
+    dims = vectors.loc[word].values.argsort()[::-1][:k]
+    vals = vectors.loc[word, dims]
 
     print ("Word of interest = ", word)
     print (" -----------------------------------------------------")
