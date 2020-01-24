@@ -52,7 +52,7 @@ def find_top_participating_dimensions(word, k):
     print ("Word of interest = ", word)
     print (" -----------------------------------------------------")
     for i, j in zip(vals, dims):
-        print ("Dimension %d = %f" %(j, i))
+        print ("Dimension %d = %f" %(j, round(i, 4)))
         for (v, w) in top_k_words[j]:
             print(f"\t{w} = {v}")
-        print("\n")
+        print()
