@@ -26,7 +26,7 @@ def top_k_contrib(k, dim):
 def load_vectors(filename):
     global vectors, dimensions, total, top_k_words
     
-    vectors = pd.read_csv(filename, sep=" ", header=None).set_index(0)
+    vectors = pd.read_csv(filename, sep="\s", engine='python', header=None, index_col=0)
     if vectors.isnull().values.any():
         warnings.warn("Your vectors contain null inputs. Replacing with 0.")
         vectors = vectors.fillna(0)
