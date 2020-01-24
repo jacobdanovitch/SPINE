@@ -45,7 +45,9 @@ def find_top_participating_dimensions(word, k):
         return
 
     dims = vectors.loc[word].values.argsort()[::-1][:k]
-    vals = vectors.loc[word, dims]
+    vals = vectors.loc[word].values[dims]
+
+    
 
     print ("Word of interest = ", word)
     print (" -----------------------------------------------------")
