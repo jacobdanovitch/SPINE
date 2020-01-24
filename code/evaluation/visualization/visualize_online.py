@@ -26,7 +26,9 @@ def top_k_contrib(k, dim):
 def load_vectors(filename):
     global vectors, dimensions, total, top_k_words
     
-    vectors = pd.read_csv(filename, sep="\s", engine='python', header=None, index_col=0)
+    vectors = pd.read_csv(filename, sep=" " header=None, index_col=0)
+    vectors = vectors.drop(columns=vectors.columns[-1]) # drop last col cause of trailing whitespace; faster than sep="\s+", engine='python'
+
     if vectors.isnull().values.any():
         warnings.warn("Your vectors contain null inputs. Replacing with 0.")
         vectors = vectors.fillna(0)
@@ -47,14 +49,10 @@ def find_top_participating_dimensions(word, k):
     dims = vectors.loc[word].values.argsort()[::-1][:k]
     vals = vectors.loc[word].values[dims]
 
-    
-
     print ("Word of interest = ", word)
     print (" -----------------------------------------------------")
     for i, j in zip(vals, dims):
-        print ("The contribution of the word '%s' in dimension %d = %f" %(word, j, i))
-        print ('Following are the top words in dimension', j, 'along with their contributions')
+        print ("Dimension %d = %f" %(j, i))
         for (v, w) in top_k_words[j]:
             print(f"\t{w} = {v}")
         print("\n")
-    return
