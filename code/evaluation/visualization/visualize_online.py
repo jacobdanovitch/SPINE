@@ -26,7 +26,7 @@ def top_k_contrib(k, dim):
 def load_vectors(filename):
     global vectors, dimensions, total, top_k_words
     
-    vectors = pd.read_csv(filename, sep=" " header=None, index_col=0)
+    vectors = pd.read_csv(filename, sep=" ", header=None, index_col=0)
     vectors = vectors.drop(columns=vectors.columns[-1]) # drop last col cause of trailing whitespace; faster than sep="\s+", engine='python'
 
     if vectors.isnull().values.any():
