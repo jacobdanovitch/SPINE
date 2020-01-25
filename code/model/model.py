@@ -1,7 +1,7 @@
 import torch
 from torch import nn
 
-from rae import Encoder, Decoder
+from modules import Encoder, Decoder
 
 import logging
 logging.basicConfig(level=logging.INFO)
