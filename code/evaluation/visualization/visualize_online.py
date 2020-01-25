@@ -46,11 +46,17 @@ def find_top_participating_dimensions(word, k):
         print('word not found')
         return
 
-    dims = vectors.loc[word].values.argsort()[::-1][:k]
-    vals = vectors.loc[word].values[dims]
+    print ("Word of interest =", word)
+    print ("-----------------------------------------------------")
 
-    print ("Word of interest = ", word)
-    print (" -----------------------------------------------------")
+    vec = vectors.loc[word].values
+    top_dims_by_vector(vec, k)
+
+
+def top_dims_by_vector(vec, k):
+    dims = vec.argsort()[::-1][:k]
+    vals = vec[dims]
+
     for i, j in zip(vals, dims):
         print ("Dimension %d = %f" %(j, round(i, 4)))
         for (v, w) in top_k_words[j]:
